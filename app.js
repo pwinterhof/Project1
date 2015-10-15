@@ -12,7 +12,7 @@
 //variables
 //=========
 //Deck
-var deck = [10,11,10,11,10,11,10,11,10]
+var deck = []
 
 //freshDeck
 var newDeck =[]
@@ -30,18 +30,22 @@ var playerTotal= 0
 //Dealer cards
 var dealerCards = []
 
+var cardTypes = ["hearts", "diamonds", "spades", "clubs"]
+var cardValues = [2,3,4,5,6,7,8,9,10,10,10,10,11]
 //=========
 //Functions
 //=========
 //Create a deck
-
-for (var i = Things.length - 1; i >= 0; i--) {
-	Things[i]
+for (var i = 0; i < 13; i++) {
+	for (var h = 0; h < 4; h++) {
+		newCard = {value: cardValues[i], suit: cardTypes[h]}
+		deck.push(newCard)
+	};
 };
 //Shuffle
 
 var shuffle = function(deck) {
-    for (var i = 0; i < 9; i++)    
+    for (var i = 0; i < 52; i++)    
         newDeck[i] = deck.splice(Math.floor(Math.random() * deck.length), 1)[0];
     return newDeck;
 }    
@@ -49,16 +53,14 @@ var shuffle = function(deck) {
 
  //Count cards
 
- var countCards = function(player){
+ var countCards = function(cards){
 	var cardTotal = 0;
-		for (var i = 0; i <player.length; i++) {
+		for (var i = 0; i <cards.length; i++) {
 			
-			cardTotal += player[i];
+			cardTotal += cards[i].value;
 		};
 	return cardTotal
 }
-
-
 
  //Make a bet
 
@@ -91,6 +93,7 @@ if (countCards(playerCards)===21){
 var playerHit = function(){
 
 	playerCards[playerCards.length] = newDeck.pop();
+	console.log(countCards(playerCards));
 }
 
 var dealerHit = function(){
@@ -114,6 +117,7 @@ var dealerLogic = function(){
 	while(countCards(dealerCards) < 17){
 	dealerHit()
 	}
+
 
 }
 
