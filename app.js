@@ -25,7 +25,7 @@ var playerMoney = 1000
 var playerBet=0
 //Player total
 var playerTotal= 0
-
+var display = $('#display')
 
 //Dealer cards
 var dealerCards = []
@@ -77,10 +77,11 @@ var dealCards = function(){
 	playerCards[i] = newDeck.pop();
 	dealerCards[i] = newDeck.pop();
 	};
+	$(display).html("It is now player's turn")
 }
 dealCards()
 
-//Check for 21 before deal
+//Check cards before deal///////////////////////////////////////////////////////////
 
 if (countCards(playerCards)===21){
 
@@ -89,19 +90,41 @@ if (countCards(playerCards)===21){
 	playerMoney = playerMoney + 2.5*(playerBet);
 }
 
-//Hit
+//Hit functions //////////////////////////////////////////////////////////////////////////
 var playerHit = function(){
 
 	playerCards[playerCards.length] = newDeck.pop();
-	console.log(countCards(playerCards));
+	// console.log(countCards(playerCards));
+	checkForBust(playerCards);
 }
 
 var dealerHit = function(){
 	dealerCards[dealerCards.length] = newDeck.pop();
+	checkForBust(dealerCards);
 }
 
-//Stay
+//Check for functions/////////////////////////////////////////////////////////////////////////////////////////
 
+var checkForWinner = function(){
+	if(countCards(playerCards)<countCards(dealerCards)){
+		//alert or div displaying "dealer wins!"
+	}
+	else if(countCards(playerCards)>countCards(dealerCards)){
+		//alert or div displaying "player wins"
+		playerMoney= playerMoney + 2*(bet);
+	}
+	else if(countCards(playerCards)===countCards(dealerCards)){
+		//"PUSH"
+		playerMoney= playerMoney + bet
+	};
+}
+
+var checkForBust = function(cards){
+	if(countCards(cards) > 21){
+		//BUST
+		console.log("bust!")
+	}
+}
 
 //Player win function
 
@@ -115,9 +138,8 @@ var dealerHit = function(){
 var dealerLogic = function(){
 	
 	while(countCards(dealerCards) < 17){
-	dealerHit()
-	}
-
+	dealerHit();
+	};
 
 }
 
