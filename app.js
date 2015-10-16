@@ -25,12 +25,13 @@ var playerMoney = 1000
 var playerBet=0
 //Player total
 var playerTotal= 0
-var display = $('#display')
-var button = $('#button')
-var bankroll = $('#bankroll')
+var display = document.getElementById("display")
+var button = document.getElementById("button")
+var bankroll = document.getElementById("bankroll")
 var hitButton = document.getElementById("hit")
 var stayButton = document.getElementById("stay")
 var dealButton = document.getElementById("deal")
+var display2 = document.getElementById("display2")
 
 //Dealer cards
 var dealerCards = []
@@ -41,12 +42,16 @@ var cardValues = [2,3,4,5,6,7,8,9,10,10,10,10,11]
 //Functions
 //=========
 //Create a deck
-for (var i = 0; i < 13; i++) {
-	for (var h = 0; h < 4; h++) {
-		newCard = {value: cardValues[i], suit: cardTypes[h]}
-		deck.push(newCard)
+
+var createDeck = function(){
+	for (var i = 0; i < 13; i++) {
+		for (var h = 0; h < 4; h++) {
+			newCard = {value: cardValues[i], suit: cardTypes[h]}
+			deck.push(newCard)
+		};
 	};
 };
+createDeck()
 //Shuffle
 
 var shuffle = function(deck) {
@@ -84,7 +89,11 @@ var dealCards = function(){
 	playerCards[i] = newDeck.pop();
 	dealerCards[i] = newDeck.pop();
 	};
-	$(display).html("It is now player's turn")
+	display.innerHTML = "It is now player's turn"
+	console.log(countCards(playerCards))
+	console.log(countCards(dealerCards))
+	console.log(playerCards)
+	console.log(dealerCards)
 }
 dealCards()
 
@@ -95,22 +104,44 @@ if (countCards(playerCards)===21){
 	alert("Blackjack!");
 
 	playerMoney = playerMoney + 2.5*(playerBet);
+	bankroll.innerHTML = ("Your balance is: " + playerMoney)
 }
 else if(countCards(playerCards)===21){
-	alert("Dealer has blackjack!");
+	alert("Dealer has blackjack!")
+	;
+}
+
+//Clear table & end game//////////////////////////////////
+
+var clearTable = function(){
+	playerCards = [];
+	dealerCards = [];
+	bet = 0;
+	display2.innerHTML = ""
+}
+
+var endGame = function(){
+	deck = []
+	var playAgain = prompt("Would you like to play another game? (yes/no)")
+	if(playAgain === "yes"){
+		clearTable()
+		dealCards()
+	}
 }
 
 //Hit and stay functions //////////////////////////////////////////////////////////////////////////
 var playerHit = function(){
 
 	playerCards[playerCards.length] = newDeck.pop();
-	// console.log(countCards(playerCards));
+	console.log(countCards(playerCards));
 	checkForBust(playerCards);
+	console.log(playerCards)
 }
 
 var dealerHit = function(){
 	dealerCards[dealerCards.length] = newDeck.pop();
 	checkForBust(dealerCards);
+	console.log(dealerCards)
 }
 
 
@@ -119,22 +150,34 @@ var dealerHit = function(){
 
 var checkForWinner = function(){
 	if(countCards(playerCards)<countCards(dealerCards)){
-		//alert or div displaying "dealer wins!"
+		display2.innerHTML = "Sorry, the dealer wins.  Hit deal to play again"
+		$(bankroll).html("Your balance is: " + playerMoney)
 	}
 	else if(countCards(playerCards)>countCards(dealerCards)){
-		//alert or div displaying "player wins"
-		playerMoney= playerMoney + 2*(bet);
+		display2.innerHTML = "Congratulations, you win! Hit deal to play again"
+		playerMoney= (playerMoney + 2*(bet));
+		$(bankroll).html("Your balance is: " + playerMoney)
 	}
 	else if(countCards(playerCards)===countCards(dealerCards)){
-		//"PUSH"
-		playerMoney= playerMoney + bet
+		display2.innerHTML = "It is a push! Hit deal to play again"
+		playerMoney+=bet;
+		$(bankroll).html("Your balance is: " + playerMoney)
 	};
 }
 
-var checkForBust = function(cards){
-	if(countCards(cards) > 21){
-		//BUST
-		console.log("bust!")
+
+//Checks for winner when the dealer still needs to hit!??
+
+
+var checkForBust = function(){
+	if(countCards(playerCards) > 21){
+		console.log("Bust!");
+		clearTable();
+		dealCards();
+	}
+	else if(countCards(dealerCards) > 21){
+		display2.innerHTML = "Congratulations, you win! The dealer busts. Hit deal to play again"
+		clearTable();
 	}
 }
 
@@ -156,8 +199,7 @@ var dealerLogic = function(){
 
 }
 
-console.log(countCards(playerCards))
-console.log(countCards(dealerCards))
+
 
 //=========
 //Listeners
@@ -167,7 +209,13 @@ hitButton.onclick = function(){
 }
 
 stayButton.onclick = function(){
+	display.innerHTML = "It is now the dealer's turn"
 	dealerLogic()
+}
+
+dealButton.onclick = function(){
+	clearTable()
+	dealCards()
 }
 
 
