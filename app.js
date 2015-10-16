@@ -26,6 +26,11 @@ var playerBet=0
 //Player total
 var playerTotal= 0
 var display = $('#display')
+var button = $('#button')
+var bankroll = $('#bankroll')
+var hitButton = document.getElementById("hit")
+var stayButton = document.getElementById("stay")
+var dealButton = document.getElementById("deal")
 
 //Dealer cards
 var dealerCards = []
@@ -65,14 +70,16 @@ var shuffle = function(deck) {
  //Make a bet
 
  var makeBet = function(){
- 	var bet = prompt("How much money would you like to bet?");
+ 	bet = prompt("How much would you like to bet?");	
  	playerBet = bet;
  	playerMoney -= bet;
+ 	$(bankroll).html("Your balance is: " + playerMoney)
  }
 
 //Deal cards
 
 var dealCards = function(){
+	makeBet()
 	for (var i = 0; i < 2; i++) {
 	playerCards[i] = newDeck.pop();
 	dealerCards[i] = newDeck.pop();
@@ -90,7 +97,7 @@ if (countCards(playerCards)===21){
 	playerMoney = playerMoney + 2.5*(playerBet);
 }
 
-//Hit functions //////////////////////////////////////////////////////////////////////////
+//Hit and stay functions //////////////////////////////////////////////////////////////////////////
 var playerHit = function(){
 
 	playerCards[playerCards.length] = newDeck.pop();
@@ -102,6 +109,8 @@ var dealerHit = function(){
 	dealerCards[dealerCards.length] = newDeck.pop();
 	checkForBust(dealerCards);
 }
+
+
 
 //Check for functions/////////////////////////////////////////////////////////////////////////////////////////
 
@@ -145,6 +154,18 @@ var dealerLogic = function(){
 
 console.log(countCards(playerCards))
 console.log(countCards(dealerCards))
+
+//=========
+//Listeners
+//=========
+hitButton.onclick = function(){
+	playerHit()
+}
+
+stayButton.onclick = function(){
+	dealerLogic()
+}
+
 
 
 //
