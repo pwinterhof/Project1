@@ -96,6 +96,9 @@ if (countCards(playerCards)===21){
 
 	playerMoney = playerMoney + 2.5*(playerBet);
 }
+else if(countCards(playerCards)===21){
+	alert("Dealer has blackjack!");
+}
 
 //Hit and stay functions //////////////////////////////////////////////////////////////////////////
 var playerHit = function(){
@@ -149,6 +152,7 @@ var dealerLogic = function(){
 	while(countCards(dealerCards) < 17){
 	dealerHit();
 	};
+	checkForWinner()
 
 }
 

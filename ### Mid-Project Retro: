@@ -1,0 +1,28 @@
+### Mid-Project Retro:
+
+#### Please take a moment to think about the questions and write down the answer before your scheduled appointment time.
+#### For question 3 please refer to your project repo, directly in links or by specific line numbers and files.
+
+##### What are the features of your MVP?
+
+The ability to create a deck, deal cards, check for blackjack, make a bet, dealer logic, check who wins, and return money to the player
+
+##### What aspects of your approach and attitude so far have been the hardest?
+
+I've been most focused on trying to keep my code organized and simple.  In the past, I would just jump at a hw assignment or lab and would be able to finish it in general.  However, it was difficult to go back to it and remember what I did.  In this project, I'm planning on getting the back-end of my MVP finished and then going back and adding bonus features and doing the CSS/DOM part.  So, it will be much easier and I'll avoid a lot more mistakes by a more organized approach.  It's not necessary the hardest part but I have to remind myself to be conscious of it and move slowly.
+
+##### What have you gotten done so far?
+
+I have completed nearly all the functions for the back end of my MVP.  
+
+Create deck: lines 38, 39, 44
+Shuffle: 52, 
+Deal: 81
+Make bet: 72
+Check for blackjack: 93
+Compare winners and pay out bets: 120
+Other functions: Hit, stay, re-deal, 
+
+##### What steps are you going to take to make sure that your goals are accomplished by project presentation time?
+
+I'm going to finish my mvp today.  Spend saturday adding on some bonus features, like insurance, split, double, and dealer hitting on a soft 7.  On sunday, I'll make it pretty.  
