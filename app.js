@@ -31,11 +31,10 @@ var bankroll = document.getElementById("bankroll")
 var hitButton = document.getElementById("hit")
 var stayButton = document.getElementById("stay")
 var dealButton = document.getElementById("deal")
+var doubleButton = document.getElementById("double")
 var display2 = document.getElementById("display2")
-
 //Dealer cards
 var dealerCards = []
-
 var cardTypes = ["hearts", "diamonds", "spades", "clubs"]
 var cardValues = [2,3,4,5,6,7,8,9,10,10,10,10,11]
 //=========
@@ -52,6 +51,7 @@ var createDeck = function(){
 	};
 };
 createDeck()
+
 //Shuffle
 
 var shuffle = function(deck) {
@@ -84,16 +84,18 @@ var shuffle = function(deck) {
 //Deal cards
 
 var dealCards = function(){
-	makeBet()
+	display.innerHTML = "It is now player's turn";
+	makeBet();
 	for (var i = 0; i < 2; i++) {
 	playerCards[i] = newDeck.pop();
 	dealerCards[i] = newDeck.pop();
 	};
-	display.innerHTML = "It is now player's turn"
 	console.log(countCards(playerCards))
 	console.log(countCards(dealerCards))
 	console.log(playerCards)
 	console.log(dealerCards)
+	return playerCards
+	return dealerCards
 }
 dealCards()
 
@@ -129,7 +131,7 @@ var endGame = function(){
 	}
 }
 
-//Hit and stay functions //////////////////////////////////////////////////////////////////////////
+//Hit and double down functions //////////////////////////////////////////////////////////////////////////
 var playerHit = function(){
 
 	playerCards[playerCards.length] = newDeck.pop();
@@ -138,13 +140,23 @@ var playerHit = function(){
 	console.log(playerCards)
 }
 
-var dealerHit = function(){
-	dealerCards[dealerCards.length] = newDeck.pop();
-	checkForBust(dealerCards);
-	console.log(dealerCards)
+// var dealerHit = function(){
+// 	checkForBust(dealerCards);
+// 	console.log(dealerCards);
+// 	console.log(countCards(dealerCards))
+// }
+
+var doubleDown = function(){
+	playerCards[2]= newDeck.pop();
+	playerMoney -= bet;
+	$(bankroll).html("Your balance is: " + playerMoney);
+	bet = bet * 2;
+	playerBet = bet;
+	checkForBust(playerCards)
+	dealerLogic();
+
+
 }
-
-
 
 //Check for functions/////////////////////////////////////////////////////////////////////////////////////////
 
@@ -160,7 +172,7 @@ var checkForWinner = function(){
 	}
 	else if(countCards(playerCards)===countCards(dealerCards)){
 		display2.innerHTML = "It is a push! Hit deal to play again"
-		playerMoney+=bet;
+		playerMoney+=((parseInt(playerBet)) +(parseInt(playerMoney)))
 		$(bankroll).html("Your balance is: " + playerMoney)
 	};
 }
@@ -171,12 +183,11 @@ var checkForWinner = function(){
 
 var checkForBust = function(){
 	if(countCards(playerCards) > 21){
-		console.log("Bust!");
+		alert("Bust! Hit deal to play again.");
 		clearTable();
-		dealCards();
 	}
 	else if(countCards(dealerCards) > 21){
-		display2.innerHTML = "Congratulations, you win! The dealer busts. Hit deal to play again"
+		alert("Congratulations, you win! The dealer busts. Hit deal to play again")
 		clearTable();
 	}
 }
@@ -185,7 +196,6 @@ var checkForBust = function(){
 
 //Dealer win function
 
-
 //============
 //Dealer logic
 //============
@@ -193,13 +203,14 @@ var checkForBust = function(){
 var dealerLogic = function(){
 	
 	while(countCards(dealerCards) < 17){
-	dealerHit();
+	dealerCards.push(newDeck.pop());
+	console.log(dealerCards)
 	};
-	checkForWinner()
+	checkForBust()
+	if(countCards(dealerCards)>0 && countCards(playerCards)>0){
+	checkForWinner()}
 
 }
-
-
 
 //=========
 //Listeners
@@ -217,7 +228,8 @@ dealButton.onclick = function(){
 	clearTable()
 	dealCards()
 }
-
-
+doubleButton.onclick = function(){
+	doubleDown()
+}
 
 //
