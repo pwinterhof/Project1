@@ -1,0 +1,41 @@
+#body{
+	background-image: url(http://i.imgur.com/3M7snSv.jpg);
+	background-size: 100%;
+	text-align: center;
+	
+}
+
+#dealerDisplay{
+	color: white;
+	margin-bottom:50px;
+	margin-top: 50px;
+}
+
+#playerDisplay{
+	color:white;
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
+#display{
+	color:white;
+}
+
+#display2{
+	color:white;
+}
+h1{
+	color: white;
+	font-size: 30px;
+	margin-bottom: 50px
+}
+
+h2{
+	color: white;
+}
+
+
+
+.cards {
+	display: inline-block;
+}

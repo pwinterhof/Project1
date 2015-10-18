@@ -33,6 +33,8 @@ var stayButton = document.getElementById("stay")
 var dealButton = document.getElementById("deal")
 var doubleButton = document.getElementById("double")
 var display2 = document.getElementById("display2")
+var dealerDisplay = document.getElementById("dealerDisplay")
+var playerDisplay = document.getElementById("playerDisplay")
 //Dealer cards
 var dealerCards = []
 var cardTypes = ["hearts", "diamonds", "spades", "clubs"]
@@ -81,37 +83,25 @@ var shuffle = function(deck) {
  	$(bankroll).html("Your balance is: " + playerMoney)
  }
 
-//Deal cards
+//Check cards after deal///////////////////////////////////////////////////////////
 
-var dealCards = function(){
-	display.innerHTML = "It is now player's turn";
-	makeBet();
-	for (var i = 0; i < 2; i++) {
-	playerCards[i] = newDeck.pop();
-	dealerCards[i] = newDeck.pop();
-	};
-	console.log(countCards(playerCards))
-	console.log(countCards(dealerCards))
-	console.log(playerCards)
-	console.log(dealerCards)
-	return playerCards
-	return dealerCards
+var checkBlackjack = function(){
+	if (countCards(playerCards)===21){
+
+		$(display).html("Blackjack! Hit deal to play again.");
+
+		playerMoney = playerMoney + 2.5*(playerBet);
+		bankroll.innerHTML = ("Your balance is: " + playerMoney)
+	}
+	else if(countCards(dealerCards)===21){
+		$(display).html("Dealer has blackjack! Hit deal to play again.");
+		clearTable();
+		bet = 0;
+		playerBet = 0;
+		;
+	}
 }
-dealCards()
 
-//Check cards before deal///////////////////////////////////////////////////////////
-
-if (countCards(playerCards)===21){
-
-	alert("Blackjack!");
-
-	playerMoney = playerMoney + 2.5*(playerBet);
-	bankroll.innerHTML = ("Your balance is: " + playerMoney)
-}
-else if(countCards(playerCards)===21){
-	alert("Dealer has blackjack!")
-	;
-}
 
 //Clear table & end game//////////////////////////////////
 
@@ -119,7 +109,7 @@ var clearTable = function(){
 	playerCards = [];
 	dealerCards = [];
 	bet = 0;
-	display2.innerHTML = ""
+	display2.innerHTML = "";
 }
 
 var endGame = function(){
@@ -131,13 +121,79 @@ var endGame = function(){
 	}
 }
 
+//Deal cards
+
+var dealCards = function(){
+	display.innerHTML = "It is now player's turn";
+	makeBet();
+	for (var i = 0; i < 2; i++) {
+	playerCards[i] = newDeck.pop();
+	dealerCards[i] = newDeck.pop();
+	};
+	$(dealerDisplay).empty();
+	$(playerDisplay).empty();
+	displayDealer()
+	showPlayer()
+	// console.log(countCards(playerCards))
+	// console.log(countCards(dealerCards))
+	// console.log(playerCards)
+	// console.log(dealerCards)
+	checkBlackjack()
+	return playerCards
+	return dealerCards
+}
+
+//Insurance/////////////////////////////////////////
+
+var checkInsurance = function(){
+	if(dealerCards.value === 11){
+		prompt("Dealer is showing an Ace.  ")
+	}
+}
+
+///Ace hi-lo ///////////////////////////////////////////////////////////////////////////////////////////   
+
+//find ace in array
+function findWithAttr(array, attr, value) {
+    for(var i = 0; i < array.length; i += 1) {
+        if(array[i][attr] === value) {
+            return i;
+        }
+    }
+}
+
+//check if ace exists and return boolean
+
+var checkAce = function(array){
+	for (var i = 0; i < array.length; i++) {
+		if(array[i].value === 11){
+			return true
+		}
+	}
+}
+
+//check the ace
+
+var changeAce = function(){
+	if((countCards(playerCards))>21 && (checkAce(playerCards))){
+		playerCards[findWithAttr(playerCards, "value", 11)].value = 1
+	}
+	else if(countCards(dealerCards)>21 && (checkAce(dealerCards))){
+		dealerCards[findWithAttr(dealerCards, "value", 11)].value = 1
+	}
+	console.log(countCards(playerCards))
+	console.log(countCards(dealerCards))
+}
+
+
 //Hit and double down functions //////////////////////////////////////////////////////////////////////////
 var playerHit = function(){
 
 	playerCards[playerCards.length] = newDeck.pop();
 	console.log(countCards(playerCards));
 	checkForBust(playerCards);
-	console.log(playerCards)
+	console.log(playerCards);
+	showPlayer();
 }
 
 // var dealerHit = function(){
@@ -148,6 +204,7 @@ var playerHit = function(){
 
 var doubleDown = function(){
 	playerCards[2]= newDeck.pop();
+	showPlayer()
 	playerMoney -= bet;
 	$(bankroll).html("Your balance is: " + playerMoney);
 	bet = bet * 2;
@@ -157,16 +214,21 @@ var doubleDown = function(){
 
 }
 
+//creates two arrays out of the single array.  Now have a multidimensional array.  This will allow you to split 
+//cards once, but will not allow you to split them an unlimited number of times
+// var splitCards = function(){
+// 	playerCards.push([playerCards[0]]);
+// 	playerCards.push([playerCards[1]]);
+// 	playerCards.splice(1,1);
+// 	playerCards.splice(0,1);
+// 	console.log(playerCards);
+// 	playerCards[0].push(newDeck.pop());
+// 	playerCards[1].push(newDeck.pop());
+// }
 
-var splitCards = function(){
-	playerCards.push([playerCards[0]]);
-	playerCards.push([playerCards[1]]);
-	playerCards.splice(1,1);
-	playerCards.splice(0,1);
-	console.log(playerCards)
-	playerCards[0].push(newDeck.pop())
-	playerCards[1].push(newDeck.pop())
-}
+// var playSplitCards = function(){
+
+// }
 
 //Check for functions/////////////////////////////////////////////////////////////////////////////////////////
 
@@ -178,7 +240,9 @@ var checkForWinner = function(){
 	else if(countCards(playerCards)>countCards(dealerCards)){
 		display2.innerHTML = "Congratulations, you win! Hit deal to play again"
 		playerMoney= (playerMoney + 2*(bet));
-		$(bankroll).html("Your balance is: " + playerMoney)
+		$(bankroll).html("Your balance is: " + playerMoney);
+		bet = 0;
+		playerBet = 0;
 	}
 	else if(countCards(playerCards)===countCards(dealerCards)){
 		display2.innerHTML = "It is a push! Hit deal to play again"
@@ -192,15 +256,18 @@ var checkForWinner = function(){
 
 
 var checkForBust = function(){
+	changeAce();
 	if(countCards(playerCards) > 21){
-		alert("Bust! Hit deal to play again.");
+		$(display).html("Bust! Hit deal to play again.");
 		clearTable();
 	}
 	else if(countCards(dealerCards) > 21){
-		alert("Congratulations, you win! The dealer busts. Hit deal to play again")
+		playerMoney= (playerMoney + 2*(bet));
+		$(bankroll).html("Your balance is: " + playerMoney)
+		$(display).html("Congratulations, you win! The dealer busts. Hit deal to play again")
 		clearTable();
-	}
-}
+	};
+};
 
 //Player win function
 
@@ -214,11 +281,14 @@ var dealerLogic = function(){
 	
 	while(countCards(dealerCards) < 17){
 	dealerCards.push(newDeck.pop());
+	showDealer()
 	console.log(dealerCards)
 	};
 	checkForBust()
 	if(countCards(dealerCards)>0 && countCards(playerCards)>0){
-	checkForWinner()}
+	showDealer()
+	checkForWinner()
+	}
 
 }
 
@@ -242,5 +312,35 @@ doubleButton.onclick = function(){
 	doubleDown()
 }
 
+//Listener display functions////////////////////
 
+var displayDealer = function(){
+	var newDiv = document.createElement("div");
+	newDiv.innerHTML = ("Dealer is showing: " + dealerCards[0].value + " of " + dealerCards[0].suit);
+	dealerDisplay.appendChild(newDiv);
+}
+
+var showDealer = function(){
+	$(dealerDisplay).empty();
+	for (var i = 0; i < dealerCards.length; i++) {
+		var newDiv = document.createElement("div");
+		newDiv.setAttribute("class:", "cards")
+		newDiv.innerHTML = (dealerCards[i].value + " of " + dealerCards[i].suit + ", ");
+		dealerDisplay.appendChild(newDiv);
+		
+	};
+}
+var showPlayer = function(){
+	$(playerDisplay).empty();
+	for (var i = 0; i < playerCards.length; i++) {
+		var newDiv = document.createElement("div");
+		newDiv.setAttribute("class:", "cards")
+		newDiv.innerHTML = (playerCards[i].value + " of " + playerCards[i].suit + ", ");
+		playerDisplay.appendChild(newDiv);
+		
+	};
+	
+}
+
+dealCards()
 //
