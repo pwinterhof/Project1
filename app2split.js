@@ -246,7 +246,7 @@ var checkForWinner = function(){
 	}
 	else if(countCards(playerCards)===countCards(dealerCards)){
 		display2.innerHTML = "It is a push! Hit deal to play again"
-		playerMoney+=((parseInt(playerBet)) +(parseInt(playerMoney)))
+		playerMoney+=(parseInt(playerBet))
 		$(bankroll).html("Your balance is: " + playerMoney)
 	};
 }
