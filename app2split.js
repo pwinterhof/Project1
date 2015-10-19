@@ -283,6 +283,7 @@ var dealerLogic = function(){
 	dealerCards.push(newDeck.pop());
 	showDealer()
 	console.log(dealerCards)
+	changeAce()
 	};
 	checkForBust()
 	if(countCards(dealerCards)>0 && countCards(playerCards)>0){
